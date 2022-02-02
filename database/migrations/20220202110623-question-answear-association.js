@@ -5,7 +5,7 @@ module.exports = {
     queryInterface.addConstraint("answers", {
       fields: ["answerId"],
       type: "foreign key",
-      name: "question_answear_associations",
+      name: "questionanswearassociations",
       references: {
         table: "questions",
         field: "id",
@@ -16,14 +16,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    queryInterface.removeConstraint("answers", {
-      fields: ["answerId"],
-      type: "foreign key",
-      name: "question_answear_associations",
-      references: {
-        table: "questions",
-        field: "id",
-      },
-    });
+    queryInterface.removeConstraint("answers", "questionanswearassociations");
   },
 };
