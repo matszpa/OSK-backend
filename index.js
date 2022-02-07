@@ -1,9 +1,13 @@
 const express = require("express");
 const app = express();
 const sequelize = require("./dbconfig");
-app.use("/", (req, res) => {
-  res.send("elo");
-});
+const dotenv = require("dotenv").config();
+const http = require("http");
+const userRouter = require("./routes/user.routes");
+app.use(express.json());
 
+app.use("/", userRouter);
+const server = http.createServer(app);
+const port = process.env.PORT || 3000;
 sequelize.sync();
-app.listen(3000, () => console.log("Działa"));
+server.listen(port, () => console.log(`Server running on port ${port}`));
