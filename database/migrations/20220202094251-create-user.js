@@ -36,22 +36,6 @@ module.exports = {
         { transaction }
       );
 
-      await queryInterface.createTable(
-        "licenceCategorys",
-        {
-          id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER,
-          },
-          name: {
-            allowNull: false,
-            type: Sequelize.STRING,
-          },
-        },
-        { transaction }
-      );
       await transaction.commit();
     } catch (err) {
       await transaction.rollback();
@@ -60,7 +44,6 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.dropTable("licenceCategorys");
       await queryInterface.dropTable("users");
       await transaction.commit();
     } catch (err) {

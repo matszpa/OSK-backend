@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       question.belongsToMany(models.licenceCategory, {
-        through: "CategoryQuestions",
+        foreignKey: "licenceCategoryId",
+        through: "category_questions",
       });
     }
   }
@@ -17,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       question: DataTypes.STRING,
       image: DataTypes.STRING,
+      type: Sequelize.STRING,
+      points: Sequelize.INTEGER,
     },
     {
       sequelize,

@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
   class licenceCategory extends Model {
     static associate(models) {
       licenceCategory.belongsToMany(models.question, {
-        through: "CategoryQuestions",
+        foreignKey: "questionId",
+        through: "category_questions",
       });
     }
   }
