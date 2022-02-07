@@ -12,7 +12,7 @@ module.exports = {
             primaryKey: true,
             type: Sequelize.INTEGER,
           },
-          answer: {
+          content: {
             type: Sequelize.STRING,
             allowNull: false,
           },
@@ -24,7 +24,7 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE,
           },
-          answerId: {
+          questionId: {
             type: Sequelize.INTEGER,
           },
         },

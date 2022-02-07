@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      question.belongsToMany(models.licenceCategory, {
+        through: "CategoryQuestions",
+      });
     }
   }
   question.init(
