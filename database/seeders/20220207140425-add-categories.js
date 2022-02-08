@@ -6,13 +6,48 @@ module.exports = {
       "licencecategories",
       [
         {
-          name: "Kategoria A",
+          id: 1,
+          name: "A",
         },
         {
-          name: "Kategoria B",
+          id: 2,
+          name: "B",
         },
         {
-          name: "Kategoria C",
+          id: 3,
+          name: "C",
+        },
+        {
+          id: 4,
+          name: "D",
+        },
+        {
+          id: 5,
+          name: "T",
+        },
+        {
+          id: 6,
+          name: "AM",
+        },
+        {
+          id: 7,
+          name: "A1",
+        },
+        {
+          id: 8,
+          name: "A2",
+        },
+        {
+          id: 9,
+          name: "B1",
+        },
+        {
+          id: 10,
+          name: "C1",
+        },
+        {
+          id: 11,
+          name: "D1",
         },
       ],
       {}
