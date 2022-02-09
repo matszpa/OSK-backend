@@ -44,14 +44,6 @@ module.exports = {
           },
           type: Sequelize.STRING,
           points: Sequelize.INTEGER,
-          createdAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
-          updatedAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-          },
         },
         { transaction }
       );

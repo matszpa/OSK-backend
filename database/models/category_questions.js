@@ -24,12 +24,19 @@ module.exports = (sequelize, DataTypes) => {
   }
   category_questions.init(
     {
-      questionId: DataTypes.INTEGER,
-      categoryId: DataTypes.INTEGER,
+      questionId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
+      licenceCategoryId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
     },
     {
       sequelize,
       modelName: "category_question",
+      timestamps: false,
     }
   );
   return category_questions;
