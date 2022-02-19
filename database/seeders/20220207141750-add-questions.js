@@ -2,8 +2,8 @@
 const xlsx = require("xlsx");
 module.exports = {
   async up(queryInterface, Sequelize) {
-    var wb = xlsx.readFile("pytania.xlsx");
-    var ws = wb.Sheets["Treść pytania"];
+    var wb = xlsx.readFile("nowe.xlsx");
+    var ws = wb.Sheets["Pytania"];
     var data = xlsx.utils.sheet_to_json(ws);
     var anwerIndex = 0;
     var questionArray = [];
@@ -31,7 +31,7 @@ module.exports = {
         type: data["Zakres struktury"],
       };
       if (data["Media"].replace(/\s/g, "") == "") singleQuestion.image = null;
-      else singleQuestion.image = data["Media"];
+      else singleQuestion.image = `/public/media/${data["Media"]}`;
       //dodwanie odpowiedzi
       if (data["Poprawna odp"] == "T" || data["Poprawna odp"] == "N") {
         // console.log(data["Numer pytania"], data["Poprawna odp"]);
