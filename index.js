@@ -8,7 +8,8 @@ const http = require("http");
 const userRouter = require("./routes/user.route");
 const questionRouter = require("./routes/question.route");
 const categoryRouter = require("./routes/category.route");
-
+const traingRouter = require("./routes/training.route")
+const drivingRouter = require("./routes/driving.route")
 const formData = require('express-form-data');
 const formidable = require('express-formidable');
 // app.use(formidable());
@@ -29,8 +30,14 @@ app.use("/public", express.static("public"));
 app.use("/", userRouter);
 app.use("/", questionRouter);
 app.use("/", categoryRouter);
-
+app.use("/", traingRouter);
+app.use("/", drivingRouter);
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
-sequelize.sync();
+try {
+    sequelize.sync();
+} catch (err) {
+    console.log(err)
+}
+
 app.listen(port, () => console.log(`Server running on port ${port}`));

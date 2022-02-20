@@ -42,7 +42,14 @@ exports.currentUser = async (req, res) => {
 
 }
 exports.newUser = async (req, res) => {
-    var user = req.body;
+    var user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phoneNumber: req.body.phoneNumber,
+        password: "admin",
+        email: req.body.email,
+        role: req.body.role
+    };
     try {
         if (await db.user.findOne({where: {email: user.email}}))
             res
@@ -50,6 +57,16 @@ exports.newUser = async (req, res) => {
                 .json({message: "Uzytkownik o takim adresie juz istnieje"});
         user.password = await bcrypt.hash(user.password, 10);
         const createdUser = await db.user.create(user);
+        if (user.role === "INSTRUCTOR") {
+            var categories = req.body.categories.map((c) => {
+                return {
+                    categoryId: c,
+                    instructorId: createdUser.id
+                }
+            })
+            console.log(categories)
+            await db.instructor.bulkCreate(categories)
+        }
         delete createdUser.password;
         const token = jwt.sign(
             {user_id: createdUser.id, role: createdUser.role},
@@ -58,7 +75,7 @@ exports.newUser = async (req, res) => {
                 expiresIn: 86400,
             }
         );
-        res.status(200).json({toke: token, userInfo: createdUser});
+        res.status(200).json({token: token, userInfo: createdUser});
     } catch (err) {
         res.send(err);
     }

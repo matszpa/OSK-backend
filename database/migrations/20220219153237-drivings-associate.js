@@ -22,21 +22,6 @@ module.exports = {
             await queryInterface.addConstraint(
                 "drivings",
                 {
-                    fields: ["coursantId"],
-                    type: "foreign key",
-                    name: "coursantIdDrivingFK",
-                    references: {
-                        table: "users",
-                        field: "id",
-                    },
-                    onDelete: "cascade",
-                    onUpdate: "cascade",
-                },
-                {transaction}
-            );
-            await queryInterface.addConstraint(
-                "drivings",
-                {
                     fields: ["trainingId"],
                     type: "foreign key",
                     name: "trainingIdDrivingFK",
@@ -58,10 +43,6 @@ module.exports = {
     async down(queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
-            await queryInterface.removeConstraint(
-                "drivings",
-                "coursantIdDrivingFK"
-            );
             await queryInterface.removeConstraint(
                 "drivings",
                 "trainingIdDrivingFK"

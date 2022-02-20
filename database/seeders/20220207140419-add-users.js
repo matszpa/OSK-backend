@@ -33,7 +33,7 @@ module.exports = {
                 lastName: "Fioletowy",
                 password: await bcrypt.hash("admin", 10),
                 email: "instruktor@instruktor.pl",
-                role: "INTRUCTOR",
+                role: "INSTRUCTOR",
             },
         ]);
     },

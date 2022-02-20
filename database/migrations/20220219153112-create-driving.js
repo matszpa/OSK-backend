@@ -8,9 +8,6 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            coursantId: {
-                type: Sequelize.INTEGER
-            },
             trainingId: {
                 type: Sequelize.INTEGER
             },

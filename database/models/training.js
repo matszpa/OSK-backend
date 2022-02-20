@@ -10,7 +10,24 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            training.belongsTo(models.user, {
+                foreignKey: "studentId", targetKey: "id", through: training,
+            })
+            training.belongsTo(models.licenceCategory, {
+                foreignKey: "categoryId", targetKey: "id", through: training,
+            })
+            models.user.hasMany(training, {foreignKey: "studentId"});
+            models.licenceCategory.hasMany(training, {foreignKey: "categoryId"});
+            // models.user.belongsToMany(models.licenceCategory, {
+            //     through: training,
+            //     foreignKey: "studentId",
+            //     targetKey: "id"
+            // })
+            // models.licenceCategory.belongsToMany(models.user, {
+            //     through: training,
+            //     foreignKey: "categoryId",
+            //     targetKey: "id"
+            // })
         }
     }
 
@@ -21,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        coursantId: DataTypes.INTEGER,
+        studentId: DataTypes.INTEGER,
         categoryId: DataTypes.INTEGER,
         startDate: DataTypes.DATE,
         endDate: DataTypes.DATE,

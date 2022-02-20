@@ -7,9 +7,9 @@ module.exports = {
             await queryInterface.addConstraint(
                 "trainings",
                 {
-                    fields: ["coursantId"],
+                    fields: ["studentId"],
                     type: "foreign key",
-                    name: "coursantIdFK",
+                    name: "studentIdFK",
                     references: {
                         table: "users",
                         field: "id",
@@ -49,7 +49,7 @@ module.exports = {
             );
             await queryInterface.removeConstraint(
                 "trainings",
-                "coursantIdFK"
+                "studentIdK"
             );
             await transaction.commit();
         } catch (err) {

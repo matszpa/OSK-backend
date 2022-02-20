@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            // driving.belongsTo(models.user, {foreignKey: "studentId"})
+            // models.user.hasMany(driving, {foreignKey: "studentId"})
+            driving.belongsTo(models.training, {foreignKey: "trainingId"})
+            models.training.hasMany(driving, {foreignKey: "trainingId"})
+            driving.belongsTo(models.user, {foreignKey: "instructorId"})
+            models.user.hasMany(driving, {foreignKey: "instructorId"})
         }
     }
 
@@ -19,12 +24,15 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        coursantId: DataTypes.INTEGER,
+        // studentId: DataTypes.INTEGER,
         trainingId: DataTypes.INTEGER,
         instructorId: DataTypes.INTEGER,
         startDate: DataTypes.DATE,
         numberHours: DataTypes.INTEGER,
-        status: DataTypes.STRING,
+        status: {
+            type: DataTypes.ENUM("Nowa", "Odbyta", "Anulowana"),
+            defaultValue: "Nowa",
+        },
         comment: DataTypes.STRING
     }, {
         sequelize,
