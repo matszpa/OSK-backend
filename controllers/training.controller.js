@@ -88,7 +88,6 @@ exports.getAvalibleStudents = async (req, res) => {
         })
 
         const idList = notAvailable.map((training) => training.training.studentId)
-        console.log("CHUJ", idList)
         var list = await db.training.findAll({
             where: {
                 studentId: {

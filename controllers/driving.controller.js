@@ -28,7 +28,8 @@ exports.drivingList = async (req, res) => {
                 },
                 {
                     model: db.training,
-                    include: {model: db.user, attributes: ['id', 'firstName', 'lastName']}
+                    include: [{model: db.user, attributes: ['id', 'firstName', 'lastName']},
+                        {model: db.licenceCategory}]
                 }
             ]
         })
