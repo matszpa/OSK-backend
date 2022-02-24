@@ -27,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
         // studentId: DataTypes.INTEGER,
         trainingId: DataTypes.INTEGER,
         instructorId: DataTypes.INTEGER,
-        startDate: DataTypes.DATE,
-        numberHours: DataTypes.INTEGER,
+        day: DataTypes.DATE,
+        hour: DataTypes.INTEGER,
         status: {
             type: DataTypes.ENUM("Nowa", "Odbyta", "Anulowana"),
             defaultValue: "Nowa",

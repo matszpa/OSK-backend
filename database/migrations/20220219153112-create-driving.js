@@ -14,10 +14,10 @@ module.exports = {
             instructorId: {
                 type: Sequelize.INTEGER
             },
-            startDate: {
+            day: {
                 type: Sequelize.DATE
             },
-            numberHours: {
+            hour: {
                 type: Sequelize.INTEGER
             },
             status: {

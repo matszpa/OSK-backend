@@ -1,12 +1,16 @@
 const db = require("../database/models");
 
 exports.addDriving = async (req, res) => {
-    var newDriving = {
-        trainingId: req.body.trainingId,
-        instructorId: req.body.instructorId,
-    }
+    var drivingList = req.body.drivingList;
+    console.log(req.body)
+    drivingList = drivingList.map((d) => {
+        d.day = new Date(req.body.day);
+        d.instructorId = parseInt(req.body.instructorId);
+        return d;
+    })
+    console.log(drivingList)
     try {
-        const created = await db.driving.create(newDriving)
+        const created = await db.driving.bulkCreate(drivingList)
         res.send(created);
     } catch (err) {
         res.send(err)
@@ -46,6 +50,22 @@ exports.changeStatus = async (req, res) => {
             await training.save();
         }
         res.send(driving);
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+exports.getAvalibleHoursForInstructor = async (req, res) => {
+    try {
+        var allHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+        var list = await db.driving.findAll({
+            attributes: ['hour'],
+            where: {instructorId: req.params.id, day: new Date(req.query.day)}
+        })
+        // list.map((obj)=>allHours.some(x=>x===obj.hour)?)
+        allHours = allHours.map((h) => list.some((obj) => obj.hour === h) ? h = false : h)
+        console.log(allHours)
+        res.send(allHours);
     } catch (err) {
         res.send(err)
     }

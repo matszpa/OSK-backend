@@ -13,12 +13,13 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "instructorId",
                 targetKey: "id"
             })
-
+            models.user.hasMany(instructor, {foreignKey: "instructorId"})
             models.licenceCategory.belongsToMany(models.user, {
                 through: instructor,
                 foreignKey: "categoryId",
                 targetKey: "id"
             })
+            models.licenceCategory.hasMany(instructor, {foreignKey: "categoryId"})
         }
     }
 

@@ -1,5 +1,5 @@
 const db = require("../database/models");
-
+const {Op} = require("sequelize");
 
 exports.test = async (req, res) => {
     try {
@@ -25,6 +25,7 @@ exports.addTraining = async (req, res) => {
         studentId: req.body.studentId,
         categoryId: req.body.categoryId,
         paid: req.body.paid,
+        startDate: req.body.startDate,
         totalCost: req.body.totalCost
     }
     try {
@@ -44,6 +45,9 @@ exports.getTrainingInCategory = async (req, res) => {
                     model: db.user,
                     attributes: ['id', 'firstName', 'lastName'],
                     where: {role: "STUDENT"}
+                },
+                {
+                    model: db.licenceCategory
                 }
             ],
             where: {categoryId: req.params.cat}
@@ -53,6 +57,54 @@ exports.getTrainingInCategory = async (req, res) => {
         res.send(users)
     } catch (err) {
         res.send(err)
+    }
+}
+exports.allTrainings = async (req, res) => {
+    try {
+        var list = await db.training.findAll({
+            // attributes: ['id'],
+            include: [
+                {
+                    model: db.user,
+                    attributes: ['id', 'firstName', 'lastName'],
+                    where: {role: "STUDENT"}
+                },
+                {
+                    model: db.licenceCategory
+                }
+            ],
+        })
+        res.send(list)
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+exports.getAvalibleStudents = async (req, res) => {
+    try {
+        var notAvailable = await db.driving.findAll({
+            include: [{model: db.training}],
+            where: {hour: parseInt(req.query.hour), day: new Date(req.query.day)}
+        })
+
+        const idList = notAvailable.map((training) => training.training.studentId)
+        console.log("CHUJ", idList)
+        var list = await db.training.findAll({
+            where: {
+                studentId: {
+                    [Op.notIn]: idList
+                },
+                categoryId: req.params.catId,
+
+            },
+            include: [{model: db.user, attributes: ['firstName', 'lastName']}]
+
+        })
+        console.log(req.query)
+        res.send(list)
+    } catch
+        (err) {
+        res.send(err);
     }
 }
 

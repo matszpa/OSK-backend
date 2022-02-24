@@ -32,7 +32,7 @@ exports.userLogin = async (req, res) => {
 exports.currentUser = async (req, res) => {
     try {
         const user = await db.user.findOne({
-            attributes: ['username', 'role'],
+            attributes: ['firstName', 'role'],
             where: {id: req.user_id}
         });
         res.send(user)
@@ -80,3 +80,27 @@ exports.newUser = async (req, res) => {
         res.send(err);
     }
 };
+
+exports.allUsers = async (req, res) => {
+    try {
+        var list = await db.user.findAll({
+            attributes: {exclude: ['password']}
+        })
+        res.send(list)
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+exports.userTrainingList = async (req, res) => {
+    try {
+        var list = await db.user.findAll({
+            attributes: ['id', 'firstName', 'lastName'],
+            where: {role: "STUDENT"}
+        })
+        res.send(list)
+    } catch (err) {
+        res.send(err)
+    }
+}
+
