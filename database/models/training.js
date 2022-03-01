@@ -42,7 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         categoryId: DataTypes.INTEGER,
         startDate: DataTypes.DATE,
         endDate: DataTypes.DATE,
-        drivingHours: DataTypes.INTEGER,
+        drivingHours: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         paid: DataTypes.INTEGER,
         totalCost: DataTypes.INTEGER
     }, {

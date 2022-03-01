@@ -1,6 +1,7 @@
 const db = require("../database/models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const {Op} = require("sequelize");
 exports.userLogin = async (req, res) => {
     console.log(req.body);
     try {
@@ -40,6 +41,17 @@ exports.currentUser = async (req, res) => {
         res.send(err)
     }
 
+}
+exports.userInfo = async (req, res) => {
+    try {
+        var user = await db.user.findOne({
+            attributes: {exclude: ['password']},
+            where: {id: req.user_id}
+        })
+        res.send(user)
+    } catch (err) {
+        res.send(err)
+    }
 }
 exports.newUser = async (req, res) => {
     var user = {
@@ -84,7 +96,12 @@ exports.newUser = async (req, res) => {
 exports.allUsers = async (req, res) => {
     try {
         var list = await db.user.findAll({
-            attributes: {exclude: ['password']}
+            attributes: {exclude: ['password']},
+            where: {
+                role: {
+                    [Op.not]: "ADMIN"
+                }
+            }
         })
         res.send(list)
     } catch (err) {
@@ -92,15 +109,44 @@ exports.allUsers = async (req, res) => {
     }
 }
 
-exports.userTrainingList = async (req, res) => {
+exports.changePassword = async (req, res) => {
     try {
-        var list = await db.user.findAll({
-            attributes: ['id', 'firstName', 'lastName'],
-            where: {role: "STUDENT"}
-        })
-        res.send(list)
+        var user = await db.user.findOne({where: {id: req.user_id}});
+        if (!user)
+            res.send("Nie znaleziono uzytkownika")
+        const validPass = await bcrypt.compare(req.body.old_password, user.password);
+        if (!validPass) {
+            res.status(403).json({message: "Złe hasło"});
+        } else {
+            const newpassword = await bcrypt.hash(req.body.new_password, 10);
+            await user.set({password: newpassword})
+            await user.save();
+            res.json({message: "Pomyślnie zmieniono hasło"});
+        }
     } catch (err) {
         res.send(err)
     }
 }
+
+exports.changeEmail = async (req, res) => {
+    try {
+        var user = await db.user.findOne({where: {id: req.user_id}});
+        if (!user)
+            res.json({message: "Nie znaleziono uzytkownika"})
+        const validPass = await bcrypt.compare(req.body.password, user.password);
+        if (!validPass) {
+            res.status(403).json({message: "Złe hasło"});
+        } else {
+
+            await user.set({email: req.body.new_email})
+            await user.save();
+            res.send({message: "Pomyślnie zmieniono email"});
+        }
+
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+
 

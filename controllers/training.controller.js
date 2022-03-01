@@ -30,7 +30,18 @@ exports.addTraining = async (req, res) => {
     }
     try {
         const createdTraining = await db.training.create(training);
-        res.send(createdTraining);
+        const trainingTosend = await db.training.findOne({
+            where: {id: createdTraining.id}, include: [
+                {
+                    model: db.user,
+                    attributes: ['id', 'firstName', 'lastName'],
+                    where: {role: "STUDENT"}
+                },
+                {
+                    model: db.licenceCategory
+                }]
+        })
+        res.send(trainingTosend);
     } catch (err) {
         res.send(err)
     }
@@ -60,6 +71,9 @@ exports.getTrainingInCategory = async (req, res) => {
     }
 }
 exports.allTrainings = async (req, res) => {
+    let where = {}
+    if (req.role === "STUDENT")
+        where['studentId'] = req.user_id
     try {
         var list = await db.training.findAll({
             // attributes: ['id'],
@@ -73,6 +87,7 @@ exports.allTrainings = async (req, res) => {
                     model: db.licenceCategory
                 }
             ],
+            where
         })
         res.send(list)
     } catch (err) {
@@ -94,7 +109,12 @@ exports.getAvalibleStudents = async (req, res) => {
                     [Op.notIn]: idList
                 },
                 categoryId: req.params.catId,
-
+                endDate: {
+                    [Op.or]: {
+                        [Op.gte]: Date.now(),
+                        [Op.eq]: null
+                    }
+                }
             },
             include: [{model: db.user, attributes: ['firstName', 'lastName']}]
 
@@ -107,5 +127,54 @@ exports.getAvalibleStudents = async (req, res) => {
     }
 }
 
+exports.userTrainingList = async (req, res) => {
+    try {
+        var activeTraining = await db.training.findAll({
+            attributes: ['studentId'],
+            where: {
+                endDate: {
+                    [Op.or]: {
+                        [Op.gte]: Date.now(),
+                        [Op.eq]: null
+                    }
+                },
+                categoryId: req.params.catId
+            }
+        })
+        const userIdList = activeTraining.map((student) => student.studentId);
+        var list = await db.user.findAll({
+            attributes: ['id', 'firstName', 'lastName'],
+            where: {
+                role: "STUDENT",
+                id: {
+                    [Op.notIn]: userIdList
+                }
+            }
+        })
+        res.send(list)
+    } catch (err) {
+        res.send(err)
+    }
+}
 
+exports.addPay = async (req, res) => {
+    try {
+        var training = await db.training.findOne({where: {id: req.params.trainingId}})
+        await training.set({paid: training.paid + req.body.pay});
+        await training.save();
+        res.send(training);
+    } catch (err) {
+        res.send(err)
+    }
+}
+exports.endTraining = async (req, res) => {
+    try {
+        var training = await db.training.findOne({where: {id: req.params.trainingId}})
+        await training.set({endDate: Date.now()});
+        await training.save();
+        res.send(training);
+    } catch (err) {
+        res.send(err)
+    }
+}
 

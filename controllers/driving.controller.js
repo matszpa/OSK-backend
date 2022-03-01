@@ -18,9 +18,16 @@ exports.addDriving = async (req, res) => {
 }
 
 exports.drivingList = async (req, res) => {
+    let where = {}
+    if (req.role === 'STUDENT')
+        where['$training.studentId$'] = req.user_id
+    if (req.role === 'INSTRUCTOR')
+        where['instructorId'] = req.user_id;
+
     try {
         var list = await db.driving.findAll({
             attributes: {exclude: ['trainingId', 'instructorId']},
+            where,
             include: [
                 {
                     model: db.user,
@@ -28,10 +35,16 @@ exports.drivingList = async (req, res) => {
                 },
                 {
                     model: db.training,
-                    include: [{model: db.user, attributes: ['id', 'firstName', 'lastName']},
-                        {model: db.licenceCategory}]
-                }
-            ]
+                    include: [{
+                        model: db.user,
+                        attributes: ['id', 'firstName', 'lastName'],
+
+                    },
+                        {model: db.licenceCategory}], required: false
+                },
+            ],
+            order: [['day', 'DESC'], 'hour']
+
         })
         res.send(list)
     } catch (err) {
@@ -41,13 +54,16 @@ exports.drivingList = async (req, res) => {
 
 exports.changeStatus = async (req, res) => {
     try {
-        const body = req.body
+        const body = {
+            status: req.body.status,
+            comment: req.body.comment
+        }
         var driving = await db.driving.findOne({where: {id: req.params.id}});
         await driving.set(body)
         await driving.save();
         if (req.body.status === "Odbyta") {
             var training = await db.training.findOne({where: {id: driving.trainingId}})
-            await training.set({drivingHours: driving.numberHours + training.drivingHours})
+            await training.set({drivingHours: training.drivingHours + 1})
             await training.save();
         }
         res.send(driving);
@@ -67,6 +83,16 @@ exports.getAvalibleHoursForInstructor = async (req, res) => {
         allHours = allHours.map((h) => list.some((obj) => obj.hour === h) ? h = false : h)
         console.log(allHours)
         res.send(allHours);
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+exports.cancelDriving = async (req, res) => {
+    try {
+        const id = req.params.id;
+        db.driving.destroy({where: {id}});
+        res.send(id)
     } catch (err) {
         res.send(err)
     }

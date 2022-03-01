@@ -21,7 +21,8 @@ module.exports = {
                 type: Sequelize.DATE
             },
             drivingHours: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                defaultValue: 0
             },
             paid: {
                 type: Sequelize.INTEGER
