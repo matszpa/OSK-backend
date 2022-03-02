@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         day: DataTypes.DATE,
         hour: DataTypes.INTEGER,
         status: {
-            type: DataTypes.ENUM("Nowa", "Odbyta", "Anulowana"),
+            type: DataTypes.ENUM("Nowa", "Zrealizowana", "Anulowana"),
             defaultValue: "Nowa",
         },
         comment: DataTypes.STRING

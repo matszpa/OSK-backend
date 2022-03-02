@@ -14,4 +14,6 @@ router.get("/userTrainingList/:catId", trainingController.userTrainingList);
 
 router.post("/addPay/:trainingId", trainingController.addPay)
 router.get("/endTraining/:trainingId", trainingController.endTraining)
+
+router.get("/getDataForReport/:trainingId", trainingController.getDataForReport)
 module.exports = router;

@@ -21,7 +21,8 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             status: {
-                type: Sequelize.STRING
+                type: Sequelize.ENUM("Nowa", "Zrealizowana", "Anulowana"),
+                defaultValue: "Nowa",
             },
             comment: {
                 type: Sequelize.STRING

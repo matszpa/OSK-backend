@@ -61,7 +61,7 @@ exports.changeStatus = async (req, res) => {
         var driving = await db.driving.findOne({where: {id: req.params.id}});
         await driving.set(body)
         await driving.save();
-        if (req.body.status === "Odbyta") {
+        if (req.body.status === "Zrealizowana") {
             var training = await db.training.findOne({where: {id: driving.trainingId}})
             await training.set({drivingHours: training.drivingHours + 1})
             await training.save();

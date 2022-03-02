@@ -177,4 +177,19 @@ exports.endTraining = async (req, res) => {
         res.send(err)
     }
 }
+exports.getDataForReport = async (req, res) => {
+    try {
+        var training = await db.training.findOne({
+            include: [
+                {model: db.driving},
+                {model: db.licenceCategory},
+                {model: db.user, attributes: ['firstName', 'lastName', 'phoneNumber', 'email']}
+            ],
+            where: {id: req.params.trainingId}
+        })
+        res.send(training);
+    } catch (err) {
+        res.send(err)
+    }
+}
 
