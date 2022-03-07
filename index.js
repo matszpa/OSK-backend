@@ -17,11 +17,10 @@ const formidable = require('express-formidable');
 // app.use(formData.parse());
 
 const fileUpload = require("express-fileupload");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cors({origin: "*"}));
 app.use(fileUpload());
 
 app.use(cors({origin: "*"}));

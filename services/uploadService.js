@@ -3,18 +3,16 @@ const mime = require("mime-types");
 exports.uploadNewImage = async (file, fileName, folderName) => {
     try {
         let ext = mime.extension(file.mimetype);
-        let pathSend = `/public/${folderName}/${fileName}.${ext}`
-        let path = `.${pathSend}`
+        let path = `/public/${folderName}/${fileName}.${ext}`
         await file.mv(
-            path,
+            `.${path}`,
             (err) => {
                 if (err) {
-                    console.error(err);
                     return false
                 }
             }
         );
-        return pathSend;
+        return path;
     } catch (err) {
         return false
     }
