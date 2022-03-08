@@ -181,7 +181,10 @@ exports.getDataForReport = async (req, res) => {
     try {
         var training = await db.training.findOne({
             include: [
-                {model: db.driving},
+                {
+                    model: db.driving,
+                    include: [{model: db.user, attributes: ['firstName', 'LastName']}]
+                },
                 {model: db.licenceCategory},
                 {model: db.user, attributes: ['firstName', 'lastName', 'phoneNumber', 'email']}
             ],
