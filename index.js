@@ -12,6 +12,8 @@ const traingRouter = require("./routes/training.route")
 const drivingRouter = require("./routes/driving.route")
 const instructorRouter = require("./routes/instructor.route")
 const examHistory = require("./routes/examHistory.route")
+const lectureRouter = require("./routes/lecture.route")
+const lecturePresenceRouter = require("./routes/lecturePresence.route")
 const formData = require('express-form-data');
 const formidable = require('express-formidable');
 // app.use(formidable());
@@ -34,7 +36,9 @@ app.use("/", categoryRouter);
 app.use("/", traingRouter);
 app.use("/", drivingRouter);
 app.use("/", instructorRouter)
-app.use("/", examHistory)
+app.use("/", examHistory);
+app.use("/", lectureRouter);
+app.use("/", lecturePresenceRouter);
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 try {

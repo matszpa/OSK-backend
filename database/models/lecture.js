@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             lecture.belongsTo(models.user, {
                 foreignKey: "instructorId", targetKey: "id",
             })
-            models.user.hasMany(lecture, {foreignKey: "studentId"});
+            models.user.hasMany(lecture, {foreignKey: "instructorId"});
             lecture.belongsTo(models.licenceCategory, {
                 foreignKey: "categoryId", targetKey: "id",
             })
@@ -25,8 +25,15 @@ module.exports = (sequelize, DataTypes) => {
         date: DataTypes.DATE,
         instructorId: DataTypes.INTEGER,
         categoryId: DataTypes.INTEGER,
-        status: DataTypes.STRING,
-        topic: DataTypes.STRING
+        status: {
+            type: DataTypes.ENUM("Zaplanowany", "Odwołany", "Ukończony"),
+            defaultValue: "Zaplanowany",
+        },
+        topic: DataTypes.STRING,
+        duration: {
+            type: DataTypes.DOUBLE,
+            defaultValue: 0
+        },
     }, {
         sequelize,
         modelName: 'lecture',

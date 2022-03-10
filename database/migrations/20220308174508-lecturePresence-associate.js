@@ -11,7 +11,7 @@ module.exports = {
                     type: "foreign key",
                     name: "lectureIdPresenceFK",
                     references: {
-                        table: "users",
+                        table: "lectures",
                         field: "id",
                     },
                     onDelete: "cascade",
@@ -26,7 +26,7 @@ module.exports = {
                     type: "foreign key",
                     name: "trainingIdPresenceFK",
                     references: {
-                        table: "licencecategories",
+                        table: "trainings",
                         field: "id",
                     },
                     onDelete: "cascade",
