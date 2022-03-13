@@ -19,9 +19,9 @@ exports.userPresenceList = async (req, res) => {
         //przygotowane pod jazdy
         var list2 = await db.lecture.findAll({
             attributes: ['lecturepresences.trainingId', [Sequelize.fn('sum', Sequelize.col('duration')), 'total']],
-            include: [{model: db.lecturePresence, attributes: []}],
+            include: [{model: db.lecturePresence, attributes: [], where: {isPresent: true}}],
             group: ['lecturepresences.trainingId'],
-            having: {'total': {[Op.gte]: 3}},
+            having: {'total': {[Op.gte]: 15}},
             raw: true,
             order: Sequelize.literal('total DESC')
         })

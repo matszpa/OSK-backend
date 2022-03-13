@@ -5,6 +5,10 @@ exports.getHistoryForUser = async (req, res) => {
         var list = await db.licenceCategory.findAll({
             include: [{model: db.examHistory, where: {studentId: req.user_id}}]
         })
+        var list = await db.examHistory.findAll({
+            include: [{model: db.licenceCategory}]
+            , where: {studentId: req.user_id}
+        })
         res.send(list);
     } catch (err) {
         res.send(err)

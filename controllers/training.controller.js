@@ -1,5 +1,6 @@
 const db = require("../database/models");
 const {Op} = require("sequelize");
+const Sequelize = require("sequelize");
 
 exports.test = async (req, res) => {
     try {
@@ -97,16 +98,31 @@ exports.allTrainings = async (req, res) => {
 
 exports.getAvalibleStudents = async (req, res) => {
     try {
+        //id studentow ktorzy maja juz 15godzin na wykladzie
+        var list2 = await db.lecture.findAll({
+            attributes: ['lecturepresences.trainingId', [Sequelize.fn('sum', Sequelize.col('duration')), 'total']],
+            include: [{model: db.lecturePresence, attributes: [], where: {isPresent: true}}],
+            group: ['lecturepresences.trainingId'],
+            having: {'total': {[Op.gte]: 15}},
+            raw: true,
+            order: Sequelize.literal('total DESC')
+        })
+        var trainingIdList = list2.map((el) => parseInt(el.trainingId))
+
+        //id studentow ktorzy maja w tym dniu jazdy
         var notAvailable = await db.driving.findAll({
             include: [{model: db.training}],
             where: {hour: parseInt(req.query.hour), day: new Date(req.query.day)}
         })
-
         const idList = notAvailable.map((training) => training.training.studentId)
+
         var list = await db.training.findAll({
             where: {
+                id: {
+                    [Op.in]: trainingIdList,
+                },
                 studentId: {
-                    [Op.notIn]: idList
+                    [Op.notIn]: idList,
                 },
                 categoryId: req.params.catId,
                 endDate: {
@@ -117,10 +133,8 @@ exports.getAvalibleStudents = async (req, res) => {
                 }
             },
             include: [{model: db.user, attributes: ['firstName', 'lastName']}]
-
         })
-        console.log(req.query)
-        res.send(list)
+        res.send(list);
     } catch
         (err) {
         res.send(err);
@@ -193,6 +207,44 @@ exports.getDataForReport = async (req, res) => {
         res.send(training);
     } catch (err) {
         res.send(err)
+    }
+}
+
+exports.getTrainingListForLecture = async (req, res) => {
+    try {
+        //lista userow ktorzy maja mniej niz 15h na wykladzie
+        var list2 = await db.lecture.findAll({
+            attributes: ['lecturepresences.trainingId', [Sequelize.fn('sum', Sequelize.col('duration')), 'total']],
+            include: [{model: db.lecturePresence, attributes: []}],
+            group: ['lecturepresences.trainingId'],
+            having: {'total': {[Op.gte]: 15}},
+            raw: true,
+            order: Sequelize.literal('total DESC')
+        })
+        var trainingIdList = list2.map((el) => el.trainingId)
+
+        var activeTraining = await db.training.findAll({
+            // attributes: ['studentId'],
+            include: [{
+                model: db.user,
+                attributes: ['firstName', 'lastName']
+            }],
+            where: {
+                endDate: {
+                    [Op.or]: {
+                        [Op.gte]: Date.now(),
+                        [Op.eq]: null
+                    }
+                },
+                studentId: {
+                    [Op.notIn]: trainingIdList
+                },
+                categoryId: req.params.catId
+            }
+        })
+        res.send(activeTraining);
+    } catch (err) {
+        res.send(err);
     }
 }
 
