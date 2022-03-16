@@ -148,5 +148,18 @@ exports.changeEmail = async (req, res) => {
     }
 }
 
+exports.changeProfileData = async (req, res) => {
+    try {
+        var user = await db.user.findOne({where: {id: req.user_id}});
+        if (!user)
+            res.json({message: "Nie znaleziono uzytkownika"})
+        await user.set({firstName: req.body.firstName, lastName: req.body.lastName, phoneNumber: req.body.phoneNumber})
+        await user.save();
+        res.send(user);
+    } catch (err) {
+        res.send(err)
+    }
+}
+
 
 

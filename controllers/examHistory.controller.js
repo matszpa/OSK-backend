@@ -2,9 +2,6 @@ const db = require("../database/models");
 
 exports.getHistoryForUser = async (req, res) => {
     try {
-        var list = await db.licenceCategory.findAll({
-            include: [{model: db.examHistory, where: {studentId: req.user_id}}]
-        })
         var list = await db.examHistory.findAll({
             include: [{model: db.licenceCategory}]
             , where: {studentId: req.user_id}

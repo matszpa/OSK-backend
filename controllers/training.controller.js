@@ -200,7 +200,11 @@ exports.getDataForReport = async (req, res) => {
                     include: [{model: db.user, attributes: ['firstName', 'LastName']}]
                 },
                 {model: db.licenceCategory},
-                {model: db.user, attributes: ['firstName', 'lastName', 'phoneNumber', 'email']}
+                {model: db.user, attributes: ['firstName', 'lastName', 'phoneNumber', 'email']},
+                {
+                    model: db.lecturePresence,
+                    include: [{model: db.lecture}]
+                }
             ],
             where: {id: req.params.trainingId}
         })

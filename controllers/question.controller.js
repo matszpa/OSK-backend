@@ -2,6 +2,7 @@ const db = require("../database/models");
 const sequelize = require("../dbconfig");
 const {Sequelize} = require("sequelize");
 const {uploadNewImage} = require("../services/uploadService")
+const fs = require('fs')
 exports.singleQuestion = async (req, res) => {
     try {
         //proba z odpowiedziami
@@ -37,7 +38,9 @@ exports.questionList = async (req, res) => {
     try {
         var list = await db.question.findAll({
             include: [{model: db.answer}],
-            limit: 10
+            limit: parseInt(req.query.limit),
+            offset: parseInt(req.query.offset),
+            // order: [['id', 'DESC']]
         })
         list.map((q) => {
             if (q.image)
@@ -133,13 +136,18 @@ exports.addQuestion = async (req, res) => {
 }
 exports.deleteQuestion = async (req, res) => {
     try {
-        db.question.findByPk(req.params.id).then(data => {
+        const id = req.params.id
+        db.question.findByPk(id).then(data => {
             if (!data) {
                 res.send("Nie znaleziono takiego pytania")
                 return;
             }
+            if (data.image) {
+                fs.unlink(`.${data.image}`, () => {
+                })
+            }
             db.question.destroy({where: {id: req.params.id}});
-            res.send("Usunieto")
+            res.send(id)
         })
     } catch (err) {
         res.send(err)

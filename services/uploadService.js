@@ -16,6 +16,4 @@ exports.uploadNewImage = async (file, fileName, folderName) => {
     } catch (err) {
         return false
     }
-
-
 }
