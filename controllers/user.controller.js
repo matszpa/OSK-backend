@@ -161,5 +161,18 @@ exports.changeProfileData = async (req, res) => {
     }
 }
 
+exports.adminInfo = async (req, res) => {
+    try {
+        var user = await db.user.findOne({
+            attributes: ['firstName', 'lastName', 'phoneNumber', 'email'],
+            where: {role: "ADMIN"}
+        });
+        res.send(user);
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+
 
 

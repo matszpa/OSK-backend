@@ -10,4 +10,5 @@ router.post("/newUser", userController.newUser);
 router.put("/changePassword", auth.verifyToken, userController.changePassword)
 router.put("/changeEmail", auth.verifyToken, userController.changeEmail)
 router.put("/changeProfileData", auth.verifyToken, userController.changeProfileData)
+router.get("/adminInfo", userController.adminInfo);
 module.exports = router;
