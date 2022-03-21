@@ -3,37 +3,7 @@ const sequelize = require("../dbconfig");
 const {Sequelize} = require("sequelize");
 const {uploadNewImage} = require("../services/uploadService")
 const fs = require('fs')
-exports.singleQuestion = async (req, res) => {
-    try {
-        //proba z odpowiedziami
-        const question = await db.category_question.findOne({
-            // attributes: { exclude: ["questionId", "licenceCategoryId"] },
-            attributes: [],
-            include: [
-                {
-                    model: db.question,
-                    include: [{model: db.answer}],
-                },
-                {
-                    model: db.licenceCategory,
-                    attributes: [],
-                    where: {
-                        name: req.params.cat,
-                    },
-                },
-            ],
-            order: sequelize.random(),
-        });
-        if (question.question.image !== null) {
-            var host = `http://${req.get("host")}`;
-            question.question.image = `${host}${question.question.image}`;
-        }
 
-        res.send(question);
-    } catch (err) {
-        res.send(err);
-    }
-};
 exports.questionList = async (req, res) => {
     try {
         var list = await db.question.findAll({
@@ -51,52 +21,7 @@ exports.questionList = async (req, res) => {
         res.send(err)
     }
 }
-exports.checkSingleQuestion = async (req, res) => {
-    try {
-        var question = await db.question.findOne({
-            where: {id: req.body.question_id},
-            include: [{model: db.answer}]
-        })
-        var yourAnswer = question.answers.find(a => a.id === req.body.answer_id);
-        if (!yourAnswer.correct) {
-            var correctAnswerId = question.answers.find(a => a.correct === true)
-            var id = correctAnswerId.id
-            res.json(id)
-        } else
-            res.send(true)
-    } catch (err) {
-        res.send(err)
-    }
-}
-exports.singleQuestionWithAnswears = async (req, res) => {
-    try {
-        var categories = await db.category_question.findAll({
-            attributes: ['licenceCategoryId'],
-            where: {questionId: req.params.id},
-        });
-        var cats = categories.map(c => c.licenceCategoryId)
-        var question = await db.question.findOne({
-            where: {id: req.params.id},
-            include: [
-                {model: db.answer},
-                // {
-                //     subQuery: db.category_question.findAll({
-                //         attributes: ['licenceCategoryId'],
-                //         where: {questionId: req.params.id},
-                //     })
-                // }
-            ],
 
-        });
-        var newQ = {
-            question,
-            cattegory_question: cats
-        }
-        res.send(newQ);
-    } catch (err) {
-        res.send(err);
-    }
-};
 exports.addQuestion = async (req, res) => {
     const bodyData = req.body;
     const parse = (data) => {
@@ -187,8 +112,6 @@ exports.generateExam = async (req, res) => {
     const S2 = await getQuestions(2, 4, "SPECJALISTYCZNY");
     const S1 = await getQuestions(1, 2, "SPECJALISTYCZNY");
     var examArray = P3.concat(P2, P1, S3, S2, S1);
-    // let examArray = S1;
-    var i = 0;
     examArray.map((q) => {
         if (q.question.image)
             q.question.image = `http://${req.get("host")}${q.question.image}`;

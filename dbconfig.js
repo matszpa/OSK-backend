@@ -1,11 +1,6 @@
 const Sequelize = require("sequelize");
-
-const sequelize = new Sequelize("praca", "root", "", {
-  dialect: "mysql",
-  host: "localhost",
-  define: {
-    timestamps: false,
-  },
-});
+require('dotenv').config();
+var config = require('./database/config/config.json');
+const sequelize = new Sequelize(config.development);
 
 module.exports = sequelize;

@@ -1,6 +1,8 @@
 const db = require("../database/models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const randomstring = require("randomstring");
+const emailService = require("../services/emailService");
 const {Op} = require("sequelize");
 exports.userLogin = async (req, res) => {
     console.log(req.body);
@@ -58,10 +60,20 @@ exports.newUser = async (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         phoneNumber: req.body.phoneNumber,
-        password: "admin",
+        password: randomstring.generate({length: 8, charset: "alphabetic"}),
         email: req.body.email,
         role: req.body.role
     };
+    let message = {
+        to: req.body.email,
+        subject: "Zostałeś dodany do OSK Drive",
+        template: "passwordTemplate",
+        context: {
+            name: user.firstName,
+            password: user.password
+        }
+    };
+    await emailService.sendPassowrd(message);
     try {
         if (await db.user.findOne({where: {email: user.email}}))
             res

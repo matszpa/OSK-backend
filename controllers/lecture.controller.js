@@ -32,7 +32,7 @@ exports.getLectures = async (req, res) => {
 
                 }
             ],
-
+            order: [['date', 'desc']]
         })
         res.send(list);
     } catch (err) {

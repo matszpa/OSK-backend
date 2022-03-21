@@ -22,7 +22,10 @@
     "jsonwebtoken": "^8.5.1",
     "mime-types": "^2.1.34",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
+    "nodemailer-express-handlebars": "^5.0.0",
     "nodemon": "^2.0.15",
+    "randomstring": "^1.2.2",
     "sequelize": "^6.15.0",
     "sequelize-cli": "^6.4.1",
     "xlsx": "^0.18.0"

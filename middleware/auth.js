@@ -12,3 +12,11 @@ exports.verifyToken = (req, res, next) => {
         next();
     });
 };
+
+exports.isAdmin = (req, res, next) => {
+    if (req.role === "ADMIN") {
+        next();
+    } else {
+        res.status(403).json({error: "Odmowa dostępu"})
+    }
+}
