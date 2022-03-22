@@ -1,16 +1,22 @@
 const db = require("../database/models");
 const sequelize = require("../dbconfig");
-const {Sequelize} = require("sequelize");
+const {Sequelize, Op} = require("sequelize");
 const {uploadNewImage} = require("../services/uploadService")
 const fs = require('fs')
 
 exports.questionList = async (req, res) => {
     try {
+        var where = {}
+        if (req.query.like) {
+            where['question'] = {
+                [Op.like]: `%${req.query.like}%`
+            }
+        }
         var list = await db.question.findAll({
             include: [{model: db.answer}],
             limit: parseInt(req.query.limit),
             offset: parseInt(req.query.offset),
-            // order: [['id', 'DESC']]
+            where
         })
         list.map((q) => {
             if (q.image)
