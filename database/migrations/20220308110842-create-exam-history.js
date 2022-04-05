@@ -16,7 +16,7 @@ module.exports = {
             },
             date: {
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+                defaultValue: Sequelize.NOW
             },
             scoredPoints: {
                 type: Sequelize.INTEGER

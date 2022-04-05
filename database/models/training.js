@@ -18,16 +18,6 @@ module.exports = (sequelize, DataTypes) => {
             })
             models.user.hasMany(training, {foreignKey: "studentId"});
             models.licenceCategory.hasMany(training, {foreignKey: "categoryId"});
-            // models.user.belongsToMany(models.licenceCategory, {
-            //     through: training,
-            //     foreignKey: "studentId",
-            //     targetKey: "id"
-            // })
-            // models.licenceCategory.belongsToMany(models.user, {
-            //     through: training,
-            //     foreignKey: "categoryId",
-            //     targetKey: "id"
-            // })
         }
     }
 

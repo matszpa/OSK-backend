@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             firstName: {
                 type: DataTypes.STRING,
                 allowNull: false,
+
             },
             lastName: {
                 type: DataTypes.STRING,
@@ -37,18 +38,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.ENUM("ADMIN", "INSTRUCTOR", "STUDENT"),
                 defaultValue: "STUDENT",
             },
-            createdAt: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
-            updatedAt: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
         },
         {
             sequelize,
             modelName: "user",
+            timestamps: false,
         }
     );
     return user;

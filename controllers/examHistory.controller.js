@@ -14,9 +14,13 @@ exports.getHistoryForUser = async (req, res) => {
 
 exports.addExamResult = async (req, res) => {
     try {
-        var data = req.body;
-        data.studentId = req.user_id;
-        var created = await db.examHistory.create(data);
+        var result = {
+            scoredPoints: req.body.scoredPoints,
+            studentId: req.user_id
+        };
+        var categoryId = await db.licenceCategory.findOne({where: {name: req.body.catName}, attributes: ['id']})
+        result.categoryId = categoryId.id;
+        var created = await db.examHistory.create(result);
         res.send(created)
     } catch (err) {
         res.send(err)

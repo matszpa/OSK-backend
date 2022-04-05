@@ -24,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     examHistory.init({
         studentId: DataTypes.INTEGER,
         categoryId: DataTypes.INTEGER,
-        date: DataTypes.DATE,
+        date: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
+        },
         scoredPoints: DataTypes.INTEGER
     }, {
         sequelize,

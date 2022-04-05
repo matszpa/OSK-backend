@@ -206,7 +206,7 @@ exports.getDataForReport = async (req, res) => {
                     include: [{model: db.lecture}]
                 }
             ],
-            where: {id: req.params.trainingId}
+            where: {id: req.params.trainingId},
         })
         res.send(training);
     } catch (err) {

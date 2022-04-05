@@ -4,7 +4,6 @@ const sequelize = require("./dbconfig");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 var bodyParser = require("body-parser");
-const http = require("http");
 const userRouter = require("./routes/user.route");
 const questionRouter = require("./routes/question.route");
 const categoryRouter = require("./routes/category.route");
@@ -14,8 +13,8 @@ const instructorRouter = require("./routes/instructor.route")
 const examHistory = require("./routes/examHistory.route")
 const lectureRouter = require("./routes/lecture.route")
 const lecturePresenceRouter = require("./routes/lecturePresence.route")
-const formData = require('express-form-data');
-const formidable = require('express-formidable');
+// const formData = require('express-form-data');
+// const formidable = require('express-formidable');
 // app.use(formidable());
 // app.use(formData.parse());
 
@@ -39,7 +38,6 @@ app.use("/", instructorRouter)
 app.use("/", examHistory);
 app.use("/", lectureRouter);
 app.use("/", lecturePresenceRouter);
-const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 try {
     sequelize.sync();
