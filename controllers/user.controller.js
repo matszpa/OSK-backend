@@ -55,55 +55,46 @@ exports.userInfo = async (req, res) => {
         res.send(err)
     }
 }
-exports.newUser = async (req, res) => {
-    var user = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phoneNumber: req.body.phoneNumber,
-        password: randomstring.generate({length: 8, charset: "alphabetic"}),
-        email: req.body.email,
-        role: req.body.role
-    };
-    let message = {
-        to: req.body.email,
-        subject: "Zostałeś dodany do OSK Drive",
-        template: "passwordTemplate",
-        context: {
-            name: user.firstName,
-            password: user.password
-        }
-    };
-    await emailService.sendPassowrd(message);
-    try {
-        if (await db.user.findOne({where: {email: user.email}}))
-            res
-                .status(409)
-                .json({message: "Uzytkownik o takim adresie juz istnieje"});
-        user.password = await bcrypt.hash(user.password, 10);
-        const createdUser = await db.user.create(user);
-        if (user.role === "INSTRUCTOR") {
-            var categories = req.body.categories.map((c) => {
-                return {
-                    categoryId: c,
-                    instructorId: createdUser.id
-                }
-            })
-            console.log(categories)
-            await db.instructor.bulkCreate(categories)
-        }
-        delete createdUser.password;
-        const token = jwt.sign(
-            {user_id: createdUser.id, role: createdUser.role},
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: 86400,
+    exports.newUser = async (req, res) => {
+        var user = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            phoneNumber: req.body.phoneNumber,
+            password: randomstring.generate({length: 8, charset: "alphabetic"}),
+            email: req.body.email,
+            role: req.body.role
+        };
+        let message = {
+            to: req.body.email,
+            subject: "Zostałeś dodany do OSK Drive",
+            template: "passwordTemplate",
+            context: {
+                name: user.firstName,
+                password: user.password
             }
-        );
-        res.status(200).json({token: token, userInfo: createdUser});
-    } catch (err) {
-        res.send(err);
-    }
-};
+        };
+        try {
+            if (await db.user.findOne({where: {email: user.email}}))
+                return res.status(303)
+                    .json({message: "Uzytkownik o takim adresie juz istnieje"});
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+            const createdUser = await db.user.create(user);
+            await emailService.sendPassword(message);
+            if (user.role === "INSTRUCTOR") {
+                var categories = req.body.categories.map((c) => {
+                    return {
+                        categoryId: c,
+                        instructorId: createdUser.id
+                    }
+                })
+                await db.instructor.bulkCreate(categories)
+            }
+            res.status(200).json({user: createdUser});
+        } catch (err) {
+            res.send(err);
+        }
+    };
 
 exports.allUsers = async (req, res) => {
     try {
@@ -121,6 +112,7 @@ exports.allUsers = async (req, res) => {
     }
 }
 
+
 exports.changePassword = async (req, res) => {
     try {
         var user = await db.user.findOne({where: {id: req.user_id}});
@@ -133,7 +125,7 @@ exports.changePassword = async (req, res) => {
             const newpassword = await bcrypt.hash(req.body.new_password, 10);
             await user.set({password: newpassword})
             await user.save();
-            res.json({message: "Pomyślnie zmieniono hasło"});
+            res.status(204).json({message: "Pomyślnie zmieniono hasło"});
         }
     } catch (err) {
         res.send(err)

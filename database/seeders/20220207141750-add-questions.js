@@ -7,7 +7,7 @@ module.exports = {
     var data = xlsx.utils.sheet_to_json(ws);
     var anwerIndex = 0;
     var questionArray = [];
-    var anwearArray = [];
+    var answerArray = [];
     var questionCategoryArray = [];
     var Kat = {
       A: 1,
@@ -23,18 +23,15 @@ module.exports = {
       D1: 11,
     };
     data.map((data) => {
-      //pytanie
       var singleQuestion = {
         id: data["Numer pytania"],
         question: data["Pytanie"],
         points: parseInt(data["Liczba"]),
         type: data["Zakres struktury"],
       };
-      if (data["Media"].replace(/\s/g, "") == "") singleQuestion.image = null;
+      if (data["Media"].replace(/\s/g, "") === "") singleQuestion.image = null;
       else singleQuestion.image = `/public/media/${data["Media"]}`;
-      //dodwanie odpowiedzi
-      if (data["Poprawna odp"] == "T" || data["Poprawna odp"] == "N") {
-        // console.log(data["Numer pytania"], data["Poprawna odp"]);
+      if (data["Poprawna odp"] === "T" || data["Poprawna odp"] === "N") {
         var odp = {
           T: {
             id: anwerIndex,
@@ -51,8 +48,8 @@ module.exports = {
         };
         anwerIndex++;
         odp[data["Poprawna odp"]].correct = true;
-        anwearArray.push(odp["T"]);
-        anwearArray.push(odp["N"]);
+        answerArray.push(odp["T"]);
+        answerArray.push(odp["N"]);
       } else {
         var odp = {
           A: {
@@ -76,9 +73,9 @@ module.exports = {
         };
         anwerIndex++;
         odp[data["Poprawna odp"]].correct = true;
-        anwearArray.push(odp["A"]);
-        anwearArray.push(odp["B"]);
-        anwearArray.push(odp["C"]);
+        answerArray.push(odp["A"]);
+        answerArray.push(odp["B"]);
+        answerArray.push(odp["C"]);
       }
       questionArray.push(singleQuestion);
 
@@ -105,7 +102,7 @@ module.exports = {
       await queryInterface.bulkInsert("questions", questionArray, {
         transaction,
       });
-      await queryInterface.bulkInsert("answers", anwearArray, {
+      await queryInterface.bulkInsert("answers", answerArray, {
         transaction,
       });
       await queryInterface.bulkInsert(

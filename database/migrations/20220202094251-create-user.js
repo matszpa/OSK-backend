@@ -30,6 +30,7 @@ module.exports = {
                     email: {
                         type: Sequelize.STRING,
                         allowNull: false,
+                        unique: true
                     },
                     role: {
                         type: Sequelize.ENUM("ADMIN", "INSTRUCTOR", "STUDENT"),

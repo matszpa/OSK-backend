@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             email: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                unique: true
             },
             role: {
                 type: DataTypes.ENUM("ADMIN", "INSTRUCTOR", "STUDENT"),

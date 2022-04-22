@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all && npx sequelize-cli db:seed --seed .\\seeders\\20220207141750-add-questions.js",
+    "migrate": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --env test && npx sequelize-cli db:seed --seed .\\seeders\\20220207141750-add-questions.js --env test",
     "start": "nodemon index.js"
   },
   "author": "",

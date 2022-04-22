@@ -8,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // driving.belongsTo(models.user, {foreignKey: "studentId"})
-            // models.user.hasMany(driving, {foreignKey: "studentId"})
             driving.belongsTo(models.training, {foreignKey: "trainingId"})
             models.training.hasMany(driving, {foreignKey: "trainingId"})
             driving.belongsTo(models.user, {foreignKey: "instructorId"})
@@ -24,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        // studentId: DataTypes.INTEGER,
         trainingId: DataTypes.INTEGER,
         instructorId: DataTypes.INTEGER,
         day: DataTypes.DATE,

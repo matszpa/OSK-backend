@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'examHistory',
+        timestamps: false,
     });
     return examHistory;
 };

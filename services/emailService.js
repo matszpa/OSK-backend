@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const hbs = require('nodemailer-express-handlebars');
 require('dotenv').config();
-exports.sendPassowrd = async (message) => {
+exports.sendPassword = async (message) => {
     try {
         var transporter = nodemailer.createTransport(
             {
