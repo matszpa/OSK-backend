@@ -3,9 +3,9 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addConstraint("answers", {
-      fields: ["answerId"],
+      fields: ["questionId"],
       type: "foreign key",
-      name: "question_answear_associations",
+      name: "questionanswearassociations",
       references: {
         table: "questions",
         field: "id",
@@ -16,16 +16,9 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint("answers", {
-      fields: ["answerId"],
-      type: "foreign key",
-      name: "question_answear_associations",
-      references: {
-        table: "questions",
-        field: "id",
-      },
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    });
+    await queryInterface.removeConstraint(
+      "answers",
+      "questionanswearassociations"
+    );
   },
 };

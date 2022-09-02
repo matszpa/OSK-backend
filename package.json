@@ -5,17 +5,29 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --env test && npx sequelize-cli db:seed --seed .\\seeders\\20220207141750-add-questions.js --env test",
     "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
     "dotenv": "^15.0.0",
     "express": "^4.17.2",
+    "express-fileupload": "^1.3.1",
+    "express-form-data": "^2.0.17",
+    "express-formidable": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mime-types": "^2.1.34",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
+    "nodemailer-express-handlebars": "^5.0.0",
     "nodemon": "^2.0.15",
+    "randomstring": "^1.2.2",
     "sequelize": "^6.15.0",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "xlsx": "^0.18.0"
   }
 }

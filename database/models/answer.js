@@ -14,11 +14,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   answer.init(
     {
-      answer: DataTypes.STRING,
+      content: DataTypes.STRING,
+      correct: DataTypes.BOOLEAN,
     },
     {
       sequelize,
       modelName: "answer",
+      timestamps: false,
     }
   );
   return answer;
